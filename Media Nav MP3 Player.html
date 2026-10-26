@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Media Nav</title>
+<style>
+:root{--bg:#0a0b0d;--bg2:#14171b;--hi:#1e88d6;--hi2:#9ad0f2;--tx:#f0f2f4;--dim:#868d95;--ln:#2a2e33;--b1:#4a4f55;--b2:#2a2e33;--b3:#1c1f23;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box}
+body.light{--bg:#d9dde1;--bg2:#eceff2;--tx:#14171a;--dim:#5b636b;--ln:#aab0b6;--b1:#fdfdfd;--b2:#e3e6e9;--b3:#c9ced3}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;margin:0;background:#000}
+body{color:var(--tx);font-family:"Segoe UI",Roboto,Arial,sans-serif;display:flex;flex-direction:column}
+.hd{height:46px;background:#000;border-bottom:2px solid var(--hi);display:flex;align-items:center;gap:8px;padding:0 8px;color:#fff}
+body.light .hd{background:#222}
+.hd .md{flex:1;font-size:16px;font-weight:600;color:var(--hi2)}
+.scr{flex:1;min-height:0;position:relative;background:linear-gradient(var(--bg2),var(--bg))}
+.v{position:absolute;inset:0;display:none;flex-direction:column;padding:12px;overflow-y:auto}
+.v.on{display:flex}
+.btn{background:linear-gradient(var(--b1),var(--b2) 48%,var(--b3) 52%,var(--b2));border:1px solid var(--ln);border-radius:3px;color:var(--tx);min-width:52px;height:46px;font-size:18px;display:flex;align-items:center;justify-content:center;padding:0 12px;font-family:inherit;flex:none}
+.btn:active,.btn.on{background:linear-gradient(#3b9be0,var(--hi) 48%,#16609a 52%,#1d78bc);color:#fff;border-color:var(--hi)}
+.hd .btn{height:36px;min-width:44px;color:var(--tx)}
+.tabs{height:58px;background:#0d0e10;border-top:2px solid var(--hi);display:flex;gap:6px;padding:6px}
+body.light .tabs{background:#222}
+.tabs .btn{flex:1;height:100%;font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:auto 0}
+.grid .btn{height:96px;flex-direction:column;gap:6px;font-size:14px}
+.grid .btn b{font-size:30px;font-weight:400}
+.tt{font-size:22px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:6px}
+.ar{font-size:16px;color:var(--hi2);margin-top:4px}
+.mt{font-size:13px;color:var(--dim);margin-top:4px}
+.bar{height:12px;background:#000;border:1px solid var(--ln);margin:20px 0 6px;position:relative;touch-action:none}
+.bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(var(--hi2),var(--hi));width:0}
+.tm{display:flex;justify-content:space-between;font-size:13px;color:var(--dim)}
+.row{display:flex;align-items:center;gap:8px;margin-top:14px}
+.row.c{justify-content:center}
+.row input[type=range]{flex:1;accent-color:var(--hi)}
+.lb{width:84px;font-size:15px}
+.lst{border:1px solid var(--ln);background:var(--bg)}
+.it{display:flex;gap:10px;padding:13px 10px;border-bottom:1px solid var(--ln);font-size:16px}
+.it.cur{background:linear-gradient(#1f6fa8,#174f78);color:#fff}
+.em{padding:26px;text-align:center;color:var(--dim)}
+.sec{font-size:13px;color:var(--hi2);margin:16px 0 6px;text-transform:uppercase}
+.sg{display:flex;gap:6px}.sg .btn{flex:1}
+.sm{display:flex;gap:6px;margin-bottom:8px}.sm .btn{flex:1;font-size:14px}
+.sb{text-align:center;margin:auto;font-size:64px}
+.toast{position:absolute;left:12px;right:12px;bottom:12px;background:#000;border:1px solid var(--hi);padding:12px;text-align:center;display:none;color:#fff}
+input[type=file]{display:none}
+</style>
+</head>
+<body>
+<div class="hd"><div class="btn" id="hm">⌂</div><div class="md" id="md">Menü</div><span id="clk">--:--</span><div class="btn" id="pw">⏻</div></div>
+<div class="scr">
+  <div class="v on" id="v-home"><div class="grid">
+    <div class="btn" data-n="Radyo"><b>📻</b>Radio</div>
+    <div class="btn" data-go="main"><b>♪</b>Media</div>
+    <div class="btn" data-n="Telefon"><b>📞</b>Phone</div>
+    <div class="btn" data-n="Driving eco²"><b>🌿</b>Driving eco²</div>
+    <div class="btn" data-n="Navigasyon"><b>🧭</b>Nav</div>
+    <div class="btn" data-go="set"><b>⚙</b>Setting</div></div></div>
+  <div class="v" id="v-main">
+    <div class="tt" id="t">Parça yok</div><div class="ar" id="a">—</div><div class="mt" id="n">0 parça</div>
+    <div class="bar" id="bar"><i id="fl"></i></div><div class="tm"><span id="cu">0:00</span><span id="du">0:00</span></div>
+    <div class="row c"><div class="btn" id="pv">⏮</div><div class="btn" id="pp" style="min-width:90px">▶</div><div class="btn" id="nx">⏭</div></div>
+    <div class="row"><div class="btn" id="mt2">🔊</div><input type="range" id="vl" min="0" max="100" value="80"></div>
+  </div>
+  <div class="v" id="v-list"><div class="lst" id="ls"></div>
+    <div class="row c"><div class="btn" id="af">📁 Dosya</div><div class="btn" id="ad">🗂 Klasör</div><div class="btn" id="cl">🗑</div></div></div>
+  <div class="v" id="v-opt">
+    <div class="sec">Repeat</div><div class="sg" id="rp"><div class="btn on">Off</div><div class="btn">Track</div><div class="btn">Folder</div><div class="btn">All</div></div>
+    <div class="sec">Shuffle</div><div class="sg" id="sh"><div class="btn on">Off</div><div class="btn">On</div></div>
+    <div class="sec">Sleep</div><div class="sg" id="sl"><div class="btn on">Off</div><div class="btn">15 dk</div><div class="btn">30 dk</div><div class="btn">60 dk</div></div></div>
+  <div class="v" id="v-set">
+    <div class="sm" id="stb"><div class="btn on">Audio</div><div class="btn">Display</div><div class="btn">Bluetooth</div><div class="btn">System</div></div>
+    <div id="s0"><div class="sec">Loudness</div><div class="sg" id="ld"><div class="btn on">Off</div><div class="btn">On</div></div>
+      <div class="sec">BAL / FAD</div>
+      <div class="row"><span class="lb">Bass</span><input type="range" id="bs" min="-10" max="10" value="0"></div>
+      <div class="row"><span class="lb">Medium</span><input type="range" id="md2" min="-10" max="10" value="0"></div>
+      <div class="row"><span class="lb">Treble</span><input type="range" id="tr" min="-10" max="10" value="0"></div>
+      <div class="row"><span class="lb">Sol/Sağ</span><input type="range" id="bl" min="-10" max="10" value="0"></div></div>
+    <div id="s1" hidden><div class="sec">Brightness</div><div class="sg" id="br"><div class="btn">Low</div><div class="btn">Mid</div><div class="btn on">High</div></div></div>
+    <div id="s2" hidden><div class="em">Bluetooth ayarları bu uygulamada yok.<br>Telefonun kendi Bluetooth'u kullanılır.</div></div>
+    <div id="s3" hidden><div class="sec">Background</div><div class="sg" id="bg"><div class="btn on">Dark</div><div class="btn">Light</div></div>
+      <div class="sec">Clock / Units</div><div class="sg" id="ck"><div class="btn on">24H</div><div class="btn">12H</div></div></div>
+  </div>
+  <div class="v" id="v-sb"><div class="sb" id="sbc">--:--</div><div class="em">Ekrana dokun</div></div>
+  <div class="toast" id="ts"></div>
+</div>
+<div class="tabs" id="tb"></div>
+<input type="file" id="f" accept="audio/*" multiple><input type="file" id="d" webkitdirectory multiple>
+<script>
+var $=function(x){return document.getElementById(x)},au=new Audio(),T=[],I=-1,P="",RP=0,SH=0,H24=1,ctx,B,M,R,LD,PN,sT,ld=0;
+function fmt(s){if(!isFinite(s))return"0:00";var m=s/60|0,c=s%60|0;return m+":"+(c<10?"0":"")+c}
+function clk(){var d=new Date(),h=d.getHours(),m=("0"+d.getMinutes()).slice(-2),s=H24?("0"+h).slice(-2)+":"+m:((h%12)||12)+":"+m+(h<12?" AM":" PM");$("clk").textContent=s;$("sbc").textContent=s}
+clk();setInterval(clk,10000);
+function seg(id,fn){var e=$(id).children;for(var k=0;k<e.length;k++)(function(k){e[k].onclick=function(){for(var j=0;j<e.length;j++)e[j].classList.toggle("on",j===k);fn(k)}})(k)}
+function toast(t){var e=$("ts");e.textContent=t;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(function(){e.style.display="none"},1800)}
+var TABS={main:[["Main","main"],["List","list"],["Options","opt"]]};
+function view(v){["home","main","list","opt","set","sb"].forEach(function(k){$("v-"+k).classList.toggle("on",k===v)});
+  var m=v==="main"||v==="list"||v==="opt";$("md").textContent=m?"USB":v==="set"?"Setting":v==="sb"?"":"Menü";
+  var h="";if(m)TABS.main.forEach(function(x){h+='<div class="btn'+(x[1]===v?' on':'')+'" data-t="'+x[1]+'">'+x[0]+'</div>'});$("tb").innerHTML=h;$("tb").style.display=m?"flex":"none";
+  Array.prototype.forEach.call($("tb").children,function(b){b.onclick=function(){view(b.dataset.t)}});if(v==="list")draw()}
+view("home");
+$("hm").onclick=function(){view("home")};$("pw").onclick=function(){view("sb")};$("v-sb").onclick=function(){view("home")};
+document.querySelectorAll("[data-go]").forEach(function(b){b.onclick=function(){view(b.dataset.go)}});
+document.querySelectorAll("[data-n]").forEach(function(b){b.onclick=function(){toast(b.dataset.n+" telefonda kullanılamaz")}});
+function eqs(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();var s=ctx.createMediaElementSource(au);B=ctx.createBiquadFilter();B.type="lowshelf";B.frequency.value=150;M=ctx.createBiquadFilter();M.type="peaking";M.frequency.value=1000;R=ctx.createBiquadFilter();R.type="highshelf";R.frequency.value=4000;PN=ctx.createStereoPanner?ctx.createStereoPanner():ctx.createGain();s.connect(B);B.connect(M);M.connect(R);R.connect(PN);PN.connect(ctx.destination);upd()}
+function upd(){if(!ctx)return;B.gain.value=+$("bs").value+(ld?5:0);M.gain.value=+$("md2").value;R.gain.value=+$("tr").value+(ld?3:0);if(PN.pan)PN.pan.value=$("bl").value/10}
+["bs","md2","tr","bl"].forEach(function(i){$(i).oninput=function(){eqs();upd()}});
+seg("ld",function(k){ld=k;eqs();upd()});
+seg("stb",function(k){for(var j=0;j<4;j++)$("s"+j).hidden=j!==k});
+seg("br",function(k){document.querySelector(".scr").style.filter="brightness("+[.55,.78,1][k]+")"});
+seg("bg",function(k){document.body.classList.toggle("light",k===1)});
+seg("ck",function(k){H24=!k;clk()});
+seg("rp",function(k){RP=k});seg("sh",function(k){SH=k});
+seg("sl",function(k){clearTimeout(sT);if(k)sT=setTimeout(function(){au.pause()},[0,15,30,60][k]*60000)});
+function add(fs){for(var k=0;k<fs.length;k++){var f=fs[k];if(f.type.indexOf("audio")===0||/\.(mp3|m4a|wav|ogg|flac|aac)$/i.test(f.name)){var rp=(f.webkitRelativePath||"").split("/");rp.pop();var n=f.name.replace(/\.[^.]+$/,""),p=n.split(" - ");T.push({t:p.length>1?p.slice(1).join(" - "):n,a:p.length>1?p[0]:"Bilinmeyen sanatçı",f:rp.join("/"),n:n,u:URL.createObjectURL(f)})}}
+  var cur=I>=0?T[I]:null;T.sort(function(x,y){return x.f===y.f?x.n.localeCompare(y.n):x.f.localeCompare(y.f)});I=cur?T.indexOf(cur):-1;draw();if(I<0&&T.length)go(0)}
+function draw(){var h="",fo={},pre=P?P+"/":"";
+  if(P)h+='<div class="it" data-up="1">↑ ..</div>';
+  T.forEach(function(x){if(x.f!==P&&(x.f+"/").indexOf(pre)===0){var s=x.f.slice(pre.length).split("/")[0];if(!fo[s]){fo[s]=1;h+='<div class="it" data-fo="'+s.replace(/"/g,"")+'">📁 '+s.replace(/</g,"&lt;")+'</div>'}}});
+  T.forEach(function(x,k){if(x.f===P)h+='<div class="it'+(k===I?' cur':'')+'" data-k="'+k+'">♪ '+(x.a+" – "+x.t).replace(/</g,"&lt;")+'</div>'});
+  $("ls").innerHTML=T.length?h:'<div class="em">Liste boş. Dosya veya klasör ekle.</div>';$("n").textContent=T.length+" parça"}
+$("ls").onclick=function(e){var t=e.target.closest(".it");if(!t)return;if(t.dataset.up){P=P.split("/").slice(0,-1).join("/");draw()}else if(t.dataset.fo){P=(P?P+"/":"")+t.dataset.fo;draw()}else{go(+t.dataset.k);view("main")}};
+function show(){if(I<0)return;var x=T[I];$("t").textContent=x.t;$("a").textContent=x.a;$("n").textContent="Parça "+(I+1)+" / "+T.length;if("mediaSession" in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:x.t,artist:x.a})}
+function go(k){if(!T.length)return;eqs();if(ctx.state==="suspended")ctx.resume();I=(k+T.length)%T.length;au.src=T[I].u;au.play().catch(function(){});show();draw()}
+function nxt(d,auto){if(!T.length)return;if(SH&&T.length>1){go(Math.floor(Math.random()*T.length));return}
+  if(RP===2){var ix=[];T.forEach(function(x,k){if(x.f===T[I].f)ix.push(k)});go(ix[(ix.indexOf(I)+d+ix.length)%ix.length]);return}
+  if(auto&&RP===0&&I===T.length-1){au.pause();return}go(I+d)}
+$("nx").onclick=function(){nxt(1)};$("pv").onclick=function(){au.currentTime>3?au.currentTime=0:nxt(-1)};
+$("pp").onclick=function(){if(I<0){view("list");return}au.paused?au.play():au.pause()};
+$("af").onclick=function(){$("f").click()};$("ad").onclick=function(){$("d").click()};
+$("f").onchange=$("d").onchange=function(e){add(e.target.files);e.target.value=""};
+$("cl").onclick=function(){au.pause();au.removeAttribute("src");T=[];I=-1;P="";$("t").textContent="Parça yok";$("a").textContent="—";draw()};
+$("mt2").onclick=function(){au.muted=!au.muted;this.textContent=au.muted?"🔇":"🔊";this.classList.toggle("on",au.muted)};
+$("vl").oninput=function(){au.volume=this.value/100};
+au.onplay=function(){$("pp").textContent="⏸"};au.onpause=function(){$("pp").textContent="▶"};
+au.onended=function(){RP===1?go(I):nxt(1,1)};
+au.ontimeupdate=function(){$("cu").textContent=fmt(au.currentTime);$("du").textContent=fmt(au.duration);$("fl").style.width=(au.duration?au.currentTime/au.duration*100:0)+"%"};
+function sk(e){var r=$("bar").getBoundingClientRect();if(au.duration)au.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*au.duration}
+$("bar").onpointerdown=function(e){sk(e);this.setPointerCapture(e.pointerId);this.onpointermove=sk};$("bar").onpointerup=function(){this.onpointermove=null};
+if("mediaSession" in navigator){navigator.mediaSession.setActionHandler("nexttrack",function(){nxt(1)});navigator.mediaSession.setActionHandler("previoustrack",function(){nxt(-1)})}
+</script>
+</body>
+</html>
